@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+
 export default function LoginPage() {
   const [state, setState] = useState("login");
 
@@ -19,18 +20,20 @@ export default function LoginPage() {
   };
 
   return (
+    <div className="absolute h-full w-full flex justify-center items-center top-0 z-1 ">
     <form
       onSubmit={handleSubmit}
-      className="sm:w-87.5 w-full text-center bg-gray-900 border border-gray-800 rounded-2xl px-8"
+      className="sm:w-87.5 w-full text-center bg-green-700  rounded-2xl px-8"
+      style={{boxShadow: "0px 42px 70px 26px rgba(0, 0, 0, 0.9)"}}
     >
       <h1 className="text-white text-3xl mt-10 font-medium">
         {state === "login" ? "Login" : "Sign up"}
       </h1>
 
-      <p className="text-gray-400 text-sm mt-2">Please sign in to continue</p>
+      <p className="text-green-100 text-sm mt-2">Please sign in to continue</p>
 
       {state !== "login" && (
-        <div className="flex items-center mt-6 w-full bg-gray-800 border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
+        <div className="flex items-center mt-6 w-full bg-white border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -51,7 +54,7 @@ export default function LoginPage() {
             type="text"
             name="name"
             placeholder="Name"
-            className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none "
+            className="w-full bg-transparent text-green-950 placeholder-gray-400 border-none outline-none "
             value={formData.name}
             onChange={handleChange}
             required
@@ -59,7 +62,7 @@ export default function LoginPage() {
         </div>
       )}
 
-      <div className="flex items-center w-full mt-4 bg-gray-800 border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
+      <div className="flex items-center w-full mt-4 bg-white  h-12 rounded-full overflow-hidden pl-6 gap-2 ">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="14"
@@ -80,14 +83,14 @@ export default function LoginPage() {
           type="email"
           name="email"
           placeholder="Email id"
-          className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none "
+          className="w-full bg-transparent text-green-950 placeholder-gray-400 border-none outline-none "
           value={formData.email}
           onChange={handleChange}
           required
         />
       </div>
 
-      <div className=" flex items-center mt-4 w-full bg-gray-800 border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
+      <div className=" flex items-center mt-4 w-full bg-white h-12 rounded-full overflow-hidden pl-6 gap-2 ">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="14"
@@ -108,7 +111,7 @@ export default function LoginPage() {
           type="password"
           name="password"
           placeholder="Password"
-          className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none"
+          className="w-full bg-transparent text-green-950 placeholder-gray-400 border-none outline-none"
           value={formData.password}
           onChange={handleChange}
           required
@@ -116,14 +119,14 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-4 text-left">
-        <button className="text-sm text-indigo-400 hover:underline">
+        <button className="text-sm text-green-100 hover:underline">
           Forget password?
         </button>
       </div>
 
       <button
         type="submit"
-        className="mt-2 w-full h-11 rounded-full text-white bg-indigo-600 hover:bg-indigo-500 transition "
+        className="mt-2 w-full h-11 rounded-full text-white bg-white/33 hover:bg-white hover:text-green-900 cursor-pointer transition "
       >
         {state === "login" ? "Login" : "Sign up"}
       </button>
@@ -132,13 +135,14 @@ export default function LoginPage() {
         onClick={() =>
           setState((prev) => (prev === "login" ? "register" : "login"))
         }
-        className="text-gray-400 text-sm mt-3 mb-11 cursor-pointer"
+        className="text-green-100 text-sm mt-3 mb-11 cursor-pointer"
       >
         {state === "login"
           ? "Don't have an account?"
           : "Already have an account?"}
-        <span className="text-indigo-400 hover:underline ml-1">click here</span>
+        <span className="text-green-300 hover:underline ml-1">click here</span>
       </p>
     </form>
+    </div>
   );
 }
