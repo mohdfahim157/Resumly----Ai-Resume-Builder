@@ -1,19 +1,51 @@
 import React, { useState } from "react";
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const [state, setState] = useState("login");
+  const [mode, setMode] = useState("login");
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+    if (mode === "login" && (!formData.email || !formData.password)) {
+      alert("Please provide email and password");
+      return;
+    }
+    if (
+      mode === "register" &&
+      (!formData.username || !formData.email || !formData.password)
+    ) {
+      alert("Please provide username, email and password");
+      return;
+    }
 
+    const endpoint =
+      mode === "login" ? "/api/auth/login" : "/api/auth/register";
+
+    try {
+      const { data } = await axios.post(
+        `http://localhost:3000${endpoint}`,
+        formData,
+      );
+
+      localStorage.setItem("token", data.token);
+
+      navigate("/dashboard", {
+        replace: true,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(error.response?.data);
+      }
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,23 +55,54 @@ export default function LoginPage() {
 
   return (
     <div className="absolute h-full w-full flex justify-center items-center top-0 z-1 ">
-    <form
-      onSubmit={handleSubmit}
-      className="sm:w-87.5 w-full text-center bg-green-700  rounded-2xl px-8"
-      style={{boxShadow: "0px 42px 70px 26px rgba(0, 0, 0, 0.9)"}}
-    >
-      <h1 className="text-white text-3xl mt-10 font-medium">
-        {state === "login" ? "Login" : "Sign up"}
-      </h1>
+      <form
+        onSubmit={handleSubmit}
+        className="sm:w-87.5 w-full text-center bg-green-700  rounded-2xl px-8"
+        style={{ boxShadow: "0px 42px 70px 26px rgba(0, 0, 0, 0.9)" }}
+      >
+        <h1 className="text-white text-3xl mt-10 font-medium">
+          {mode === "login" ? "Login" : "Sign up"}
+        </h1>
 
-      <p className="text-green-100 text-sm mt-2">Please sign in to continue</p>
+        <p className="text-green-100 text-sm mt-2">
+          Please sign in to continue
+        </p>
 
-      {state !== "login" && (
-        <div className="flex items-center mt-6 w-full bg-white border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
+        {mode !== "login" && (
+          <div className="flex items-center mt-6 w-full bg-white border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              className="text-gray-400"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {" "}
+              <circle cx="12" cy="8" r="5" />{" "}
+              <path d="M20 21a8 8 0 0 0-16 0" />{" "}
+            </svg>
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              className="w-full bg-transparent text-green-950 placeholder-gray-400 border-none outline-none "
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        )}
+
+        <div className="flex items-center w-full mt-4 bg-white  h-12 rounded-full overflow-hidden pl-6 gap-2 ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="14"
+            height="14"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -49,102 +112,75 @@ export default function LoginPage() {
             strokeLinejoin="round"
           >
             {" "}
-            <circle cx="12" cy="8" r="5" />{" "}
-            <path d="M20 21a8 8 0 0 0-16 0" />{" "}
+            <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />{" "}
+            <rect x="2" y="4" width="20" height="16" rx="2" />{" "}
           </svg>
           <input
-            type="text"
-            name="name"
-            placeholder="Name"
+            type="email"
+            name="email"
+            placeholder="Email id"
             className="w-full bg-transparent text-green-950 placeholder-gray-400 border-none outline-none "
-            value={formData.name}
+            value={formData.email}
             onChange={handleChange}
             required
           />
         </div>
-      )}
 
-      <div className="flex items-center w-full mt-4 bg-white  h-12 rounded-full overflow-hidden pl-6 gap-2 ">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          className="text-gray-400"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <div className=" flex items-center mt-4 w-full bg-white h-12 rounded-full overflow-hidden pl-6 gap-2 ">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            className="text-gray-400"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {" "}
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />{" "}
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />{" "}
+          </svg>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            className="w-full bg-transparent text-green-950 placeholder-gray-400 border-none outline-none"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="mt-4 text-left">
+          <button className="text-sm text-green-100 hover:underline">
+            Forget password?
+          </button>
+        </div>
+
+        <button
+          type="submit"
+          className="mt-2 w-full h-11 rounded-full text-white bg-white/33 hover:bg-white hover:text-green-900 cursor-pointer transition "
         >
-          {" "}
-          <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />{" "}
-          <rect x="2" y="4" width="20" height="16" rx="2" />{" "}
-        </svg>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email id"
-          className="w-full bg-transparent text-green-950 placeholder-gray-400 border-none outline-none "
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div className=" flex items-center mt-4 w-full bg-white h-12 rounded-full overflow-hidden pl-6 gap-2 ">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          className="text-gray-400"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {" "}
-          <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />{" "}
-          <path d="M7 11V7a5 5 0 0 1 10 0v4" />{" "}
-        </svg>
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="w-full bg-transparent text-green-950 placeholder-gray-400 border-none outline-none"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div className="mt-4 text-left">
-        <button className="text-sm text-green-100 hover:underline">
-          Forget password?
+          {mode === "login" ? "Login" : "Sign up"}
         </button>
-      </div>
 
-      <button
-        type="submit"
-        className="mt-2 w-full h-11 rounded-full text-white bg-white/33 hover:bg-white hover:text-green-900 cursor-pointer transition "
-      >
-        {state === "login" ? "Login" : "Sign up"}
-      </button>
-
-      <p
-        onClick={() =>
-          setState((prev) => (prev === "login" ? "register" : "login"))
-        }
-        className="text-green-100 text-sm mt-3 mb-11 cursor-pointer"
-      >
-        {state === "login"
-          ? "Don't have an account?"
-          : "Already have an account?"}
-        <span className="text-green-300 hover:underline ml-1">click here</span>
-      </p>
-    </form>
+        <p
+          onClick={() =>
+            setMode((prev) => (prev === "login" ? "register" : "login"))
+          }
+          className="text-green-100 text-sm mt-3 mb-11 cursor-pointer"
+        >
+          {mode === "login"
+            ? "Don't have an account?"
+            : "Already have an account?"}
+          <span className="text-green-300 hover:underline ml-1">
+            click here
+          </span>
+        </p>
+      </form>
     </div>
   );
 }
