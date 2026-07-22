@@ -10,8 +10,10 @@ export default function LoginPage() {
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
