@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import {useAuth} from "../../hooks/auth.hook.ts"
+import { useBuilder } from "../../../context/Builder.context";
 
 export default function LoginPage() {
+  const { user,loadingStatus } = useBuilder();
+  const { handleLogin ,handleRegister } = useAuth();
   const [mode, setMode] = useState("login");
 
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -15,43 +16,25 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (mode === "login" && (!formData.email || !formData.password)) {
-      alert("Please provide email and password");
-      return;
-    }
-    if (
-      mode === "register" &&
-      (!formData.username || !formData.email || !formData.password)
-    ) {
-      alert("Please provide username, email and password");
-      return;
-    }
+            const {username, email, password } = formData;
 
-    const endpoint =
-      mode === "login" ? "/api/auth/login" : "/api/auth/register";
-
-    try {
-      const { data } = await axios.post(
-        `http://localhost:3000${endpoint}`,
-        formData,
-      );
-
-      localStorage.setItem("token", data.token);
-
-      navigate("/dashboard", {
-        replace: true,
-      });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(error.response?.data);
-      }
-    }
+           const data = (mode === "login") ? await handleLogin(email,password) : await handleRegister(username,email,password)
+           console.log("data",data)
+        
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+    if (loadingStatus) {
+    return (
+      <div className="absolute h-full w-full flex justify-center items-center top-0 z-1 ">
+        <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="absolute h-full w-full flex justify-center items-center top-0 z-1 ">

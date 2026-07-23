@@ -5,12 +5,14 @@ import Hero from "../components/Home/Hero";
 import Testimonial from "../components/Home/Testimonial";
 
 export default function Home() {
+
   return (<>
             <Banner/>
             <Hero/>
             <Fearures/>
             <Testimonial/>
             <Footer/>
+
   </>
   )
 }

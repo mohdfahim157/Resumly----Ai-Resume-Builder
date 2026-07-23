@@ -213,7 +213,7 @@ const DotGrid: React.FC<DotGridProps> = ({
       pr.vy = vy;
       pr.speed = speed;
 
-      const rect = canvasRef.current!.getBoundingClientRect();
+      const rect = canvasRef.current!.getBoundingClientRect() || { left: 0, top: 0 };
       pr.x = e.clientX - rect.left;
       pr.y = e.clientY - rect.top;
 
